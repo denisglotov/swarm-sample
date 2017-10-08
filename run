@@ -1,0 +1,23 @@
+#!/bin/sh
+
+case $1 in
+    up|deploy)
+        docker stack deploy swarm-test -c docker-compose.yaml
+        ;;
+    ps)
+        docker stack ps swarm-test
+        ;;
+    down|stop|rm)
+        docker stack rm swarm-test
+        ;;
+    clean)
+        docker rm -f $(docker ps -aq)
+        ;;
+    log|logs)
+        container=$(docker ps | grep swarm-test_my-server | cut -f 1 -d ' ')
+        docker logs $container
+        ;;
+    *)
+        echo "$1: no command recognised."
+        ;;
+esac
